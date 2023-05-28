@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video decode</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Source+Code+Pro:200,900');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            color: #fff;
+            font-family: "Source Code Pro";
+        }
+
+        body {
+            background-color: #0f172a;
+        }
+
+
+        nav {
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 20px 17%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        nav .logo {
+            width: 80px;
+        }
+
+        nav ul li {
+            list-style: none;
+            display: inline-block;
+            margin-left: 40px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 17px;
+        }
+
+        .logo {
+            color: #fff;
+        }
+
+        #about {
+            color: #f97316;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+
+        }
+
+        .wrapper {
+            width: 100%;
+            padding: 20px 17%;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .left-bar {
+            width: 25%;
+
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
+
+        .main-side {
+            width: 75%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .encode {
+            margin-top: 50px;
+            /* box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset; */
+            border-left: solid #fff;
+            color: #fff;
+            width: 80%;
+            margin-bottom: 5px;
+
+        }
+
+        .encode a h1 {
+            padding-left: 20px;
+            color: fff;
+        }
+
+
+
+        .decode {
+            border-left: solid #69d4ff;
+            color: #69d4ff;
+            background-color: #212a3c;
+            width: 80%;
+        }
+
+        .decode a h1 {
+            padding-left: 20px;
+            color: #69d4ff;
+        }
+
+        .encode_main {
+            font-size: 50px;
+        }
+
+        h2 {
+
+            font-weight: 400;
+            color: #69d4ff;
+            font-size: 35px;
+
+            position: relative;
+        }
+
+        h2:before {
+            position: absolute;
+            content: '';
+            width: 100%;
+
+
+            background: #69d4ff;
+            height: 3px;
+        }
+
+        h2 i {
+            font-style: normal;
+            background: #fff;
+            position: relative;
+
+        }
+
+        :focus {
+            outline: none;
+        }
+
+        /* necessary to give position: relative to parent. */
+        input[type="text"] {
+            font: 15px/24px;
+            color: #333;
+            width: 100%;
+            box-sizing: border-box;
+            letter-spacing: 1px;
+        }
+
+
+        .col-3 {
+            float: left;
+            width: 100%;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        /* necessary to give position: relative to parent. */
+        input[type="text"] {
+            font: 15px/24px;
+            color: #d5d2d2;
+            width: 100%;
+            box-sizing: border-box;
+            letter-spacing: 1px;
+            background-color: #212a3c;
+        }
+
+        .effect-9 {
+            border: 3px solid #5d5d5d;
+            padding: 7px 14px 90px;
+            transition: 0.4s;
+        }
+
+        .effect-9~.focus-border:before,
+        .effect-9~.focus-border:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 0;
+            height: 2px;
+            background-color: #69d4ff;
+            transition: 0.2s;
+            transition-delay: 0.2s;
+        }
+
+        .effect-9~.focus-border:after {
+            top: auto;
+            bottom: 0;
+            right: auto;
+            left: 0;
+            transition-delay: 0.6s;
+        }
+
+        .effect-9~.focus-border i:before,
+        .effect-9~.focus-border i:after {
+            content: "";
+            position: absolute;
+            top: 0px;
+
+            left: 0px;
+
+            width: 5px;
+            height: 0px;
+            background-color: #69d4ff;
+            transition: 0.2s;
+        }
+
+        .effect-9~.focus-border i:after {
+            left: auto;
+            right: 0;
+            top: auto;
+            bottom: 0;
+            transition-delay: 0.4s;
+        }
+
+        .effect-9:focus~.focus-border:before,
+        .effect-9:focus~.focus-border:after {
+            width: 100%;
+            transition: 0.2s;
+            transition-delay: 0.6s;
+        }
+
+        .effect-9:focus~.focus-border:after {
+            transition-delay: 0.2s;
+        }
+
+        .effect-9:focus~.focus-border i:before,
+        .effect-9:focus~.focus-border i:after {
+            height: 100%;
+            transition: 0.2s;
+        }
+
+        .effect-9:focus~.focus-border i:after {
+            transition-delay: 0.4s;
+        }
+
+        #dropArea {
+            width: 60%;
+            height: 80px;
+            background-color: #212a3c;
+            border: 3px dashed #5d5d5d;
+        }
+
+        #dropArea h3 {
+            padding-top: 5%;
+            text-align: center;
+        }
+
+        button {
+            display: block;
+            width: 200px;
+            height: 40px;
+            line-height: 40px;
+            font-size: 18px;
+            font-family: sans-serif;
+            text-decoration: none;
+            color: #fff;
+            background-color: #69d4ff;
+            border: 2px solid #5d5d5d;
+            letter-spacing: 2px;
+            text-align: center;
+            position: relative;
+            transition: all .35s;
+        }
+
+        button span {
+            position: relative;
+            z-index: 2;
+        }
+
+        button:after {
+            position: absolute;
+            content: "";
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: #f97316;
+            transition: all .35s;
+        }
+
+        button:hover {
+            color: #fff;
+        }
+
+        button:hover:after {
+            width: 100%;
+        }
+
+        .success {
+            width: 80%;
+            height: 40px;
+            background-color: #f97316;
+
+        }
+
+        .success h4 {
+            text-align: center;
+            vertical-align: middle;
+            padding-top: 10px;
+        }
+
+        form {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body style="background: #0f172a;">
+    <div class="hero">
+        <nav>
+            <h1 class="logo"><a href="/">Steganography</a></h1>
+            <ul class="nav__links">
+                <li><a href="#">About</a></li>
+                <li><a href="/encode_image_remake">Image</a></li>
+                <li><a href="/decode_remake">Audio</a></li>
+                <li><a style="color: #f97316" href="">Video</a></li>
+                <li><a href="#">Text</a></li>
+            </ul>
+        </nav>
+
+
+    </div>
+    <div class="wrapper">
+        <div class="container">
+            <div class="left-bar">
+                <div class="encode">
+                    <a href="/encode_video_remake">
+                        <h1>Encode</h1>
+                    </a>
+                </div>
+                <div class="decode">
+                    <a href="#">
+                        <h1>Decode</h1>
+                    </a>
+                </div>
+            </div>
+            <div class="main-side">
+                <h1 class="encode_main">Decode Video Steganography</h1>
+                <br>
+                {% if message %}
+                    <div class="success">
+                        <h4>The secret message: {{ message }}</h4>
+                    </div>
+                {% endif %}
+                <form method="post" class="d-grid gap-2 col-6 mx-auto" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <br>
+
+                    <h3>Secret key</h3>
+                    <div class="col-3">
+                        <input class="effect-9" name="key" type="text" placeholder="Placeholder Text">
+                        <span class="focus-border">
+                            <i></i>
+                        </span>
+                    </div>
+                    <br>
+                    <h3>Attach a cover video</h3>
+                    <br>
+                    <div id="dropArea" class="form-control" onclick="openFilePicker()" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+                        <h3><span style="color: #69d4ff;">Choose</span> or drag and drop file here</h3>
+                    </div>
+                    <input type="file" class="form-control" name="encoded_video_file" id="encoded_video_file" style="display: none;" onchange="handleFileSelect(event)">
+                    <br><br>
+                    <div class="button_code">
+                        <button type="submit">
+                            <h4><span>Decode</span></h4>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        function openFilePicker() {
+            var fileInput = document.getElementById("encoded_video_file");
+            fileInput.click();
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            var files = event.dataTransfer.files;
+            var audioFileInput = document.getElementById("encoded_video_file");
+            audioFileInput.files = files;
+
+            // Display the file name
+            var dropArea = document.getElementById("dropArea");
+            dropArea.innerText = files[0].name;
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+
+            // Add a visual indication that the area is a drop target
+            event.target.classList.add("drag-over");
+        }
+
+        function handleDragLeave(event) {
+            // Remove the visual indication when leaving the drop target
+            event.target.classList.remove("drag-over");
+        }
+
+        function handleFileSelect(event) {
+            var file = event.target.files[0];
+            var dropArea = document.getElementById("dropArea");
+            dropArea.innerText = file.name;
+        }
+    </script>
+
+
+
+</body>
+
+</html>

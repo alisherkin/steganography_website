@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container text-center col-6" style="margin-top: 10%;">
+      <h1 class="mb-3">Decode an audio file</h1>
+      {% if message %}
+        <p class="alert alert-dark">The decoded message is: {{ message }}</p>
+      {% endif %}
+      <form method="post" class="d-grid gap-2 col-6 mx-auto" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="text-center">
+              <div class="col-12">
+                <label for="encoded_audio_file" class="form-label">Select an encoded audio file:</label>
+              </div>
+              <div>
+                  <div style="background-color: aliceblue; padding: 20px;" id="dropArea" class="form-control" onclick="openFilePicker()" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">Drag and drop audio file here or click to select a file</div>
+                  <input type="file" class="form-control" name="encoded_audio_file" id="encoded_audio_file" required style="display: none;" onchange="handleFileSelect(event)">
+              </div>
+              <br>
+              <div class="col-12">
+                <label for="encoded_audio_file" class="form-label">Enter the key:</label>
+              </div>
+              <div>
+                  <input type="text" class="form-control" name="key" placeholder="Key" required>
+              </div>
+          </div>
+          <br>
+          <br>
+          <div class="d-grid gap-2 col-6 mx-auto">
+            <button type="submit" class="btn btn-light btn-lg">Decode</button>
+          </div>
+      </form>
+    </div>
+
+    <script>
+        function openFilePicker() {
+            var fileInput = document.getElementById("encoded_audio_file");
+            fileInput.click();
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            var files = event.dataTransfer.files;
+            var audioFileInput = document.getElementById("encoded_audio_file");
+            audioFileInput.files = files;
+
+            // Display the file name
+            var dropArea = document.getElementById("dropArea");
+            dropArea.innerText = files[0].name;
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+
+            // Add a visual indication that the area is a drop target
+            event.target.classList.add("drag-over");
+        }
+
+        function handleDragLeave(event) {
+            // Remove the visual indication when leaving the drop target
+            event.target.classList.remove("drag-over");
+        }
+
+        function handleFileSelect(event) {
+            var file = event.target.files[0];
+            var dropArea = document.getElementById("dropArea");
+            dropArea.innerText = file.name;
+        }
+    </script>
+{% endblock %}

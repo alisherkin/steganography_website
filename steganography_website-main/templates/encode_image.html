@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block title %}Encode{% endblock %}
+{% block style %}
+
+{% endblock %}
+
+
+{% block content %}
+    <div class="container text-center col-6" style="margin-top: 10%;">
+        <h1>Encode Image</h1>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <br>
+            <div class="row">
+                <div class="col-6">
+                    <label class="form-label" for="image_file">Select an image file:</label>
+                </div>
+                <div class="col-6">
+                    <div style="background-color: aliceblue; padding: 20px;" id="dropArea" class="form-control" onclick="openFilePicker()" ondrop="handleDrop(event)" ondragover="event.preventDefault()">Drag and drop image file here or click to select a file</div>
+                    <input type="file" class="form-control" name="image_file" required id="image_file" style="display: none;" onchange="handleFileSelect(event)">
+                </div>
+            </div>
+
+
+            <br>
+            <div class="row">
+                <div class="col-6">
+                    <label for="message">Enter a message to encode:</label>
+                </div>
+                <div class="col-6">
+                    <input class="form-control" name="message" id="message">
+                </div>
+            </div>
+            <br>
+            <div class="d-grid gap-2 col-6 mx-auto">
+                <button type="submit" class="btn btn-light btn-lg">Encode</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function openFilePicker() {
+            var fileInput = document.getElementById("image_file");
+            fileInput.click();
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            var files = event.dataTransfer.files;
+            var imageFileInput = document.getElementById("image_file");
+            imageFileInput.files = files;
+
+            // Display the file name
+            var dropArea = document.getElementById("dropArea");
+            dropArea.innerText = files[0].name;
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+
+            // Add a visual indication that the area is a drop target
+            event.target.classList.add("drag-over");
+        }
+
+        function handleDragLeave(event) {
+            // Remove the visual indication when leaving the drop target
+            event.target.classList.remove("drag-over");
+        }
+        function handleFileSelect(event) {
+            var file = event.target.files[0];
+            var dropArea = document.getElementById("dropArea");
+            dropArea.innerText = file.name;
+        }
+
+        // Attach event listeners to the drop area
+        var dropArea = document.getElementById("dropArea");
+        dropArea.addEventListener("dragover", handleDragOver);
+        dropArea.addEventListener("dragleave", handleDragLeave);
+        dropArea.addEventListener("drop", handleDrop);
+    </script>
+
+{% endblock %}
